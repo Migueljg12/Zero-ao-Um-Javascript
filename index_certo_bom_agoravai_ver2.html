@@ -81,8 +81,8 @@
  // Remover a pessoa do array cuja o code é o informado
     const removePerson = (code) => {          
             const filtrado = people.filter((valor) => {                
-               const o = valor.code == code
-                return !o           
+               const removido = valor.code == code
+                return !removido           
             })
             people = filtrado
              
