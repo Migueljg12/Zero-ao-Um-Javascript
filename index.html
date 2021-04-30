@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>  
+
+    <label for="code_input">Código</label>
+    <input type="text" id="code_input"/>
+    <br>
+    <br>
+
+    <label for="name_input">Nome</label>
+    <input type="text" id="name_input"/>
+    <br>
+    <br>
+
+    <label for="year_input">Ano de nasc.</label>
+    <input type="number" id="year_input"/>
+    <br>
+    <br>
+
+    <button onclick="addPerson()">Adicionar</button>
+    <button onclick="calculateAges()">Calcular Idades</button>
+    <input placeholder="Buscar" type="text" onkeyup="searchPeople(event)"/>
+    <section id="container"></section>
+</body>
+<script>
+
+    const container = document.querySelector("#container")
+    const codeInput = document.getElementById("code_input")
+    const nameInput = document.getElementById("name_input")
+    const yearInput = document.getElementById("year_input")
+    
+    let people = []
+    let peopleAll = []
+
+    const render = () => {
+        
+        container.innerHTML = ""
+        
+        people.forEach((item, index) => {
+
+            container.innerHTML += `
+                <p>
+                    ${item.code} - ${item.name} - ${item.year} - ${item.age} - ${item.isMajor}
+                    <button onClick="removePerson('${item.code}')"> 
+                        Remover
+                    </button>
+                </p>
+            `
+
+        })
+    }
+
+    const addPerson = () => {
+
+        const code = codeInput.value
+        const name = nameInput.value
+        const year = yearInput.value
+
+        // Antes de inserir a nova pessoa no array verificar se não 
+        // tem nenhum item com o mesmo id
+        
+        
+         const verificando = people.find((codigo) => codigo.code == code)            
+             if (verificando){
+            alert("Código já inserido!")     
+           
+            }else{
+            
+            people.push({ 
+                code,
+                name,
+                year,
+                age: 0,
+                isMajor : 0
+                })
+            }
+        
+        render();
+       
+    }
+
+    const removePerson = (code) => {          
+            const filtrado = people.filter((valor) => {                
+               const removido = valor.code == code
+                return !removido           
+            })
+            people = filtrado
+             
+    render();
+    
+    }
+           
+    const calculateAges = () => {
+           people.map((idade , index) =>{
+                const addAge = idade.age = 2021 - idade.year
+                if (addAge < 18){
+                    idade.isMajor = "É de Menor!"
+                }else{
+                    idade.isMajor = "É de Maior!"
+                }
+         })
+                 
+        render();
+    }
+
+    const searchPeople = (event) => {
+        const value = event.target.value
+
+        if(!peopleAll.length){
+            peopleAll = people
+        }
+
+        if(value == ""){
+            people = peopleAll
+            peopleAll = []
+            render();
+            return;
+        }
+
+        // Pegar somente pessoas que possuem 
+        // o value no nome
+
+        people = []
+
+        render();
+
+    }
+
+</script>
+</html>
