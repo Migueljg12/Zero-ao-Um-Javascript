@@ -79,6 +79,8 @@
                 age: 0,
                 isMajor : 0
                 })
+                //peopleAll = people
+    
             }
         
         render();
@@ -95,27 +97,42 @@
     render();
     
     }
-    let dateObj = new Date();
-    let anoAtual = dateObj.getUTCFullYear();      
-        const calculateAges = () => {
-           people.map((idade , index) =>{
-                const addAge = idade.age = anoAtual - idade.year
+           
+    const calculateAges = () => {
+
+        let dateObj = new Date();
+        let year = dateObj.getUTCFullYear();
+        let idade
+        let limit = people.length - 1
+            people.forEach((value)=>{                             
+                idade = year - value.year
+                let verificação = value.age = idade
+                if (verificação < 18){
+                    value.isMajor = "É Menor de Idade!"
+                    }else{ value.isMajor = " É Maior de Idade!"}
+            })
+
+
+
+
+          /*  people.map((idade , index) =>{
+                const addAge = idade.age = 2021 - idade.year
                 if (addAge < 18){
                     idade.isMajor = "É de Menor!"
                 }else{
                     idade.isMajor = "É de Maior!"
                 }
-         })
+         }) */
                  
         render();
     }
-
+   
     const searchPeople = (event) => {
         const value = event.target.value
-
+       
         if(!peopleAll.length){
-            peopleAll = people
-        }
+         peopleAll = people
+         }
 
         if(value == ""){
             people = peopleAll
@@ -123,16 +140,15 @@
             render();
             return;
         }
-
         // Pegar somente pessoas que possuem 
         // o value no nome
+        
         const verificando = people.filter((pesquisa) => {
              let novoArray =  pesquisa.name.normalize('NFD').toLowerCase().includes(value) 
                 return novoArray        
         })
 
         people = verificando
-
         render();
 
     }
