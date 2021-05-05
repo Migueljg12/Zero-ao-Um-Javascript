@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>  
+
+    <label for="code_input">Código</label>
+    <input type="text" id="code_input"/>
+    <br>
+    <br>
+
+    <label for="name_input">Nome</label>
+    <input type="text" id="name_input"/>
+    <br>
+    <br>
+
+    <label for="year_input">Ano de nasc.</label>
+    <input type="number" id="year_input"/>
+    <br>
+    <br>
+
+    <button onclick="addPerson()">Adicionar</button>
+    <button onclick="calculateAges()">Calcular Idades</button>
+    <input placeholder="Buscar" type="text" onkeyup="searchPeople(event)"/>
+    <section id="container"></section>
+</body>
+<script>
+
+    const container = document.querySelector("#container")
+    const codeInput = document.getElementById("code_input")
+    const nameInput = document.getElementById("name_input")
+    const yearInput = document.getElementById("year_input")
+    
+    let people = [
+        { code : 1, name: "andre", year: 1996, age: 0, isMajor: false },
+        { code : 2, name: "felipe", year: 2006, age: 0, isMajor: false },
+    ]
+    // let peopleAll = []
+    let search = ""
+
+    const render = () => {
+        
+        container.innerHTML = ""
+
+        let data = [];
+
+        if(search == ""){
+            data = people
+        }else{
+            data = people.filter(item => {
+                const parsedName = item.name.toLowerCase()
+                return parsedName.includes(search)
+            })
+        }
+            
+        data.forEach((item, index) => {
+            container.innerHTML += `
+                <p>
+                    ${item.code} - ${item.name} - ${item.year} - ${item.age} - ${item.isMajor}
+                    <button onClick="removePerson('${item.code}')"> 
+                        Remover
+                    </button>
+                    <button onClick="editPerson('${item.code}')"> 
+                        Editar
+                    </button>
+                </p>
+            `
+        })
+    }
+
+    const addPerson = () => {
+
+        const code = codeInput.value
+        const name = nameInput.value
+        const year = yearInput.value
+
+        let encontrei = people.some((item) => item.code == code)
+        
+        // let encontrei = people.find((item) => item.code == code)
+
+        // let encontrei = false
+
+        // people.forEach((item) => {
+        //     if(item.code == code){
+        //         encontrei = true
+        //     }
+        // })
+
+        if(encontrei){
+            alert("Este código já está sendo utilizado")
+            return;
+        }
+
+        const person = { 
+            code: code,
+            name: name,
+            year: year,
+            age: 0,
+            isMajor: 0
+        }
+
+        people.push(person)
+        render();
+
+    }
+
+    const removePerson = (code) => {
+
+        people = people.filter((item) => item.code != code)
+
+        // let index = people.findIndex((item) => item.code == code)
+        // people.splice(index, 1)
+
+        render();
+    }
+    
+    const calculateAges = () => {
+        console.log("Chamou calcular idade")
+
+        people = people.map(item => {
+            const newItem = { ...item }
+
+            newItem.age = (2021 - item.year)
+            newItem.isMajor = (newItem.age >= 18)
+
+            return newItem
+        })
+
+        render();
+    }
+
+    const searchPeople = (event) => {
+
+        search = event.target.value.toLowerCase()
+        render();
+        // const value = event.target.value.toLowerCase()
+
+        // if(!peopleAll.length){
+        //     peopleAll = people
+        // }
+
+        // if(value == ""){
+        //     people = peopleAll
+        //     peopleAll = []
+        //     render();
+        //     return;
+        // }
+
+        // people = peopleAll.filter(item => {
+        //     const parsedName = item.name.toLowerCase()
+        //     return parsedName.includes(value)
+        // })
+
+        // render();
+
+    }
+
+    const editPerson = (code) => {
+
+        const name = prompt("Qual o novo nome?")
+        const year = prompt("Qual o novo ano de nascimento?")
+
+        let pessoa = people.find((item) => item.code == code)
+
+        const verificador = people.map((item) => { item.code == code
+            let editor = {... pessoa}
+                pessoa.name = name
+                pessoa.year = year
+                
+            return editor
+        })
+       
+        // Encontre a pessoa ou index dentro do array cujo o código seja igual ao código passado
+        // e substitua ele por uma versão com seus valores alterados de acordo com a entrada do usuário
+
+        render();
+        
+    }
+
+    render();
+
+</script>
+</html>

@@ -45,10 +45,13 @@
         people.forEach((item, index) => {
 
             container.innerHTML += `
-                <p>
+               <p>
                     ${item.code} - ${item.name} - ${item.year} - ${item.age} - ${item.isMajor}
                     <button onClick="removePerson('${item.code}')"> 
                         Remover
+                    </button>
+                    <button onClick="editPerson('${item.code}')"> 
+                        Editar
                     </button>
                 </p>
             `
@@ -61,53 +64,40 @@
         const code = codeInput.value
         const name = nameInput.value
         const year = yearInput.value
-
-        // Antes de inserir a nova pessoa no array verificar se não 
-        // tem nenhum item com o mesmo id
-        
         
          const verificando = people.find((codigo) => codigo.code == code)            
              if (verificando){
-            alert("Código já inserido!")     
-           
-            }else{
-            
-            people.push({ 
-                code,
-                name,
-                year,
-                age: 0,
-                isMajor : 0
-                })
-            }
-        
-        render();
-       
+            alert("Código já inserido!")
+            return}            
+          
+        people.push({ 
+            code,
+            name,
+            year,
+            age: 0,
+            isMajor : 0
+            })   
+                       
+        render();      
     }
 
     const removePerson = (code) => {          
-            const filtrado = people.filter((valor) => {                
-               const removido = valor.code == code
-                return !removido           
-            })
-            people = filtrado
-             
+            people = people.filter((valor) => valor.code != code)
+                       
     render();
-    
     }
-    let dateObj = new Date();
-    let anoAtual = dateObj.getUTCFullYear();      
-        const calculateAges = () => {
-           people.map((idade , index) =>{
-                const addAge = idade.age = anoAtual - idade.year
-                if (addAge < 18){
-                    idade.isMajor = "É de Menor!"
-                }else{
-                    idade.isMajor = "É de Maior!"
-                }
-         })
                  
-        render();
+    const calculateAges = () => {
+        let dateObj = new Date();
+        let anoAtual = dateObj.getUTCFullYear();
+            people.map((idade , index) =>{
+                const addAge = idade.age = anoAtual - idade.year
+                    if (addAge < 18){
+                        idade.isMajor = "É de Menor!"
+                    }else{
+                        idade.isMajor = "É de Maior!"}
+                })                   
+    render();
     }
 
     const searchPeople = (event) => {
@@ -123,19 +113,26 @@
             render();
             return;
         }
-
-        // Pegar somente pessoas que possuem 
-        // o value no nome
-        const verificando = people.filter((pesquisa) => {
-             let novoArray =  pesquisa.name.normalize('NFD').toLowerCase().includes(value) 
-                return novoArray        
-        })
-
-        people = verificando
-
-        render();
-
+        people = peopleAll.filter((pesquisa) => pesquisa.name.normalize('NFD').toLowerCase().includes(value) )                    
     }
+  
+    const editPerson = (code) => {
+        const name = prompt("Qual o novo nome?")
+        const year = prompt("Qual o novo ano de nascimento?")
+
+            let pessoa = people.find((item) => item.code == code)
+
+            const verificador = people.map((item) => { item.code == code
+                let editor = {... pessoa}
+                    pessoa.name = name
+                    pessoa.year = year
+                    
+                 return editor
+                }) 
+    render();    
+    }
+
+render();
 
 </script>
 </html>
