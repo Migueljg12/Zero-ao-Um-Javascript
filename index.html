@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body>  
+
+<body>
 
     <label for="code_input">Código</label>
-    <input type="text" id="code_input"/>
+    <input type="text" id="code_input" />
     <br>
     <br>
 
     <label for="name_input">Nome</label>
-    <input type="text" id="name_input"/>
+    <input type="text" id="name_input" />
     <br>
     <br>
 
     <label for="year_input">Ano de nasc.</label>
-    <input type="number" id="year_input"/>
+    <input type="number" id="year_input" />
     <br>
     <br>
 
     <button onclick="addPerson()">Adicionar</button>
     <button onclick="calculateAges()">Calcular Idades</button>
-    <input placeholder="Buscar" type="text" onkeyup="searchPeople(event)"/>
+    <input placeholder="Buscar" type="text" onkeyup="searchPeople(event)" />
     <section id="container"></section>
 </body>
 <script>
@@ -34,14 +36,14 @@
     const codeInput = document.getElementById("code_input")
     const nameInput = document.getElementById("name_input")
     const yearInput = document.getElementById("year_input")
-    
+
     let people = []
     let peopleAll = []
 
     const render = () => {
-        
+
         container.innerHTML = ""
-        
+
         people.forEach((item, index) => {
 
             container.innerHTML += `
@@ -64,75 +66,77 @@
         const code = codeInput.value
         const name = nameInput.value
         const year = yearInput.value
-        
-         const verificando = people.find((codigo) => codigo.code == code)            
-             if (verificando){
+
+        const verificando = people.find((codigo) => codigo.code == code)
+        if (verificando) {
             alert("Código já inserido!")
-            return}            
-          
-        people.push({ 
+            return
+        }
+
+        people.push({
             code,
             name,
             year,
             age: 0,
-            isMajor : 0
-            })   
-                       
-        render();      
+            isMajor: 0
+        })
+
+        render();
     }
 
-    const removePerson = (code) => {          
-            people = people.filter((valor) => valor.code != code)
-                       
-    render();
+    const removePerson = (code) => {
+        people = people.filter((valor) => valor.code != code)
+
+        render();
     }
-                 
+
     const calculateAges = () => {
         let dateObj = new Date();
         let anoAtual = dateObj.getUTCFullYear();
-            people.map((idade , index) =>{
-                const addAge = idade.age = anoAtual - idade.year
-                    if (addAge < 18){
-                        idade.isMajor = "É de Menor!"
-                    }else{
-                        idade.isMajor = "É de Maior!"}
-                })                   
-    render();
+        people.forEach((idade, index) => {
+            const addAge = idade.age = anoAtual - idade.year
+            if (addAge < 18) {
+                idade.isMajor = "É de Menor!"
+            } else {
+                idade.isMajor = "É de Maior!"
+            }
+        })
+        render();
     }
 
     const searchPeople = (event) => {
         const value = event.target.value
 
-        if(!peopleAll.length){
+        if (!peopleAll.length) {
             peopleAll = people
         }
 
-        if(value == ""){
+        if (value == "") {
             people = peopleAll
             peopleAll = []
             render();
             return;
         }
-        people = peopleAll.filter((pesquisa) => pesquisa.name.normalize('NFD').toLowerCase().includes(value) )                    
+        people = peopleAll.filter((pesquisa) =>
+            pesquisa.name.normalize('NFD').toLowerCase().includes(value))
     }
-  
+
     const editPerson = (code) => {
         const name = prompt("Qual o novo nome?")
         const year = prompt("Qual o novo ano de nascimento?")
 
-            let pessoa = people.find((item) => item.code == code)
+        let index = people.findIndex((item) => item.code == code)
+        let editor = { ...people[index] }
+        editor.name = name
+        editor.year = year
 
-            const verificador = people.map((item) => { item.code == code
-                let editor = {... pessoa}
-                    pessoa.name = name
-                    pessoa.year = year
-                    
-                 return editor
-                }) 
-    render();    
+        people.splice(index, 1, editor)
+
+        render();
     }
 
-render();
+    render();
 
 </script>
+
 </html>
